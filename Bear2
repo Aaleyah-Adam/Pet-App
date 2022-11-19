@@ -1,0 +1,79 @@
+import SwiftUI
+
+struct ContentView: View {
+    
+    @State private var hasOffset = false
+    @GestureState var dragOffset = CGSize.zero // CGSize A structure that contains width and height values.
+    @State var position = CGSize.zero
+    @State var brushingPoints = 0.00
+    @State var FullWidth = 100.00 
+    
+    
+    var body: some View {
+        
+        ZStack {
+            
+            Image("Body")
+                .resizable()
+                .offset(x: 0, y: 0)
+                .frame(width: 440, height: 400)
+            
+            Image("Head")
+                .resizable()
+                .offset(x: 0, y: -200)
+                .frame(width: 350, height: 300)
+            
+            Circle() 
+                .fill(.black)
+                .frame(width:35, height:50)
+                .offset(x:40, y: -200)
+            
+            Circle() 
+                .fill(.black)
+                .frame(width:35, height:50)
+                .offset(x:-50, y:-200) 
+                
+            Circle() 
+                .fill(.white)
+                .frame(width:10, height:50)
+                .offset(x:-40, y:-200) 
+            
+            Circle() 
+                .fill(.white)
+                .frame(width:10, height:50)
+                .offset(x:50, y:-200) 
+            
+            
+            Image("Fish")
+                .resizable()
+                .frame(width:150, height:100)
+                .offset(x: position.width + dragOffset.width, y: position.height + dragOffset.height)
+                .offset(x:0, y:250)
+                .gesture(
+                    DragGesture()
+                        .updating($dragOffset, body: { (value, state, transaction) in
+                            
+                            state = value.translation
+                        })
+                        .onEnded({ (value) in // Remove this section and it will go back to where it starts
+                            self.position.height += value.translation.height
+                            self.position.width += value.translation.width
+                            print("height",position.height) // So you can see coordinates
+                            print("width",position.width)
+                        })
+                )
+            Button{
+                print("Fed Bear")
+                FullWidth += 1.5
+            }
+        label: {
+            Image("Full")
+                .resizable()
+                .frame(width:FullWidth, height:FullWidth)
+                .offset(x:0, y:300)
+        }
+            
+            
+        }
+    }
+}
